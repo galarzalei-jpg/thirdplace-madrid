@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Merch · ThirdPlace Madrid</title>
+<meta name="description" content="Limited ThirdPlace merch: hoodies, caps and bottles in black and gold.">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-title="nav_merch">
+<main>
+  <section class="page-hero">
+    <img class="hero-bg" src="assets/img/merch.jpg" alt="Black ThirdPlace hoodie and cap with the gold 3 logo">
+    <div class="container">
+      <span class="eyebrow" data-i18n="sh_eye">Wear the lifestyle</span>
+      <h1 data-i18n="sh_title">For members, by members</h1>
+      <p data-i18n="sh_lead">Limited editions in black and gold. Pick up at the club for free or get it delivered anywhere in Madrid.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <div class="grid g4" id="products"></div>
+      <div class="center mt-4"><a href="cart.html" class="btn btn-ghost" data-i18n="sh_go_cart">Go to cart</a></div>
+    </div>
+  </section>
+</main>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+window.pageInit = function () {
+  const el = document.getElementById("products");
+  el.innerHTML = PRODUCTS.map(p => `
+    <div class="card product reveal">
+      <div class="art">${ART[p.id]}</div>
+      <div class="card-body">
+        <h3 style="font-size:1rem">${L(p.name)}</h3>
+        <p class="small">${L(p.desc)}</p>
+        <div class="row">
+          <span class="price">${euro(p.price)}</span>
+          ${p.sizes ? `<select aria-label="Size" data-size="${p.id}">${p.sizes.map(s => `<option ${s === "M" ? "selected" : ""}>${s}</option>`).join("")}</select>` : ""}
+        </div>
+        <button class="btn btn-primary btn-block mt-2" data-add="${p.id}">${t("add_cart", "Add to cart")}</button>
+      </div>
+    </div>`).join("");
+  el.addEventListener("click", e => {
+    const b = e.target.closest("[data-add]"); if (!b) return;
+    const sel = el.querySelector(`[data-size="${b.dataset.add}"]`);
+    Cart.add(b.dataset.add, sel ? sel.value : null);
+    const p = PRODUCTS.find(x => x.id === b.dataset.add);
+    toast(L(p.name) + " " + t("added", "added to cart"));
+  });
+};
+</script>
+</body>
+</html>

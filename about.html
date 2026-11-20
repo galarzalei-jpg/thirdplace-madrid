@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About &amp; Contact · ThirdPlace Madrid</title>
+<meta name="description" content="The story behind ThirdPlace, our address and opening hours in Madrid, contact form and blog with plans in Madrid with friends.">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-title="nav_about">
+<main>
+  <section class="page-hero">
+    <img class="hero-bg" src="assets/img/entrance.jpg" alt="Members queuing at the black ThirdPlace entrance with the gold 3 logo, Madrid, at night">
+    <div class="container">
+      <span class="eyebrow" data-i18n="a_eye">Our story</span>
+      <h1 data-i18n="a_title">Why "the third place"?</h1>
+      <p data-i18n="a_lead">Home is your first place. Work or uni is your second. The third is where friendships happen.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container split">
+      <div class="reveal">
+        <p data-i18n="a_p1">The name comes from the American sociologist <strong>Ray Oldenburg</strong> and his book <em>The Great Good Place</em> (1989). He described the "third place": the café, the neighbourhood bar or the barbershop where you know everyone's name, and where communities are born.</p>
+        <p class="mt-2" data-i18n="a_p2">Many cities have lost those places. Young people meet at home, if the flat is big enough, or in venues built for them to spend and leave. <strong>ThirdPlace brings the third place back</strong>, the way people in their 20s and 30s actually live it: with sofas, games, good food and a room of your own for the night.</p>
+        <p class="mt-2" data-i18n="a_p3">That's also why our symbol is a simple <span class="amber">3</span>. Home, work, and then us.</p>
+      </div>
+      <div class="reveal">
+        <div class="grid g3" style="text-align:center">
+          <div class="panel"><div class="logo-3" style="color:var(--muted)">1</div><p class="small mt-1" data-i18n="a_1">Home</p></div>
+          <div class="panel"><div class="logo-3" style="color:var(--muted)">2</div><p class="small mt-1" data-i18n="a_2">Work / uni</p></div>
+          <div class="panel" style="border-color:var(--amber)"><div class="logo-3">3</div><p class="small mt-1" style="color:var(--cream)">ThirdPlace</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt" id="contact">
+    <div class="container split" style="align-items:start">
+      <div class="reveal">
+        <span class="eyebrow" data-i18n="a_v_eye">Visit us</span>
+        <h2 data-i18n="a_v_title">Find the black door with the 3</h2>
+        <ul class="check-list mt-3">
+          <li>Calle de Fernando VI, 3 · 28004 Madrid</li>
+          <li data-i18n="a_metro">Metro Alonso Martínez (L4, L5, L10)</li>
+          <li data-i18n="hours_wk">Mon–Thu 17:00–01:00</li>
+          <li data-i18n="hours_fs">Fri–Sat 16:00–03:00</li>
+          <li data-i18n="hours_su">Sun 12:00–00:00</li>
+          <li>hola@thirdplacemadrid.com</li>
+        </ul>
+        <div class="btn-row mt-3">
+          <a class="btn btn-ghost" id="wa-link" target="_blank" rel="noopener">WhatsApp</a>
+          <a class="btn btn-ghost" href="https://www.openstreetmap.org/search?query=Calle%20de%20Fernando%20VI%2C%20Madrid" target="_blank" rel="noopener" data-i18n="a_map">Open map</a>
+        </div>
+        <p class="small mt-2" data-i18n="a_tour">Not a member yet? Ask for a tour: we'll show you around and buy you a drink.</p>
+      </div>
+      <form class="panel form reveal" id="contact-form" novalidate>
+        <h3 data-i18n="a_f_title">Write to us</h3>
+        <div class="form-row">
+          <div class="field"><label data-i18n="full_name">Full name</label><input name="name" data-rule="req" autocomplete="name"><div class="err" data-i18n="err_req">Required</div></div>
+          <div class="field"><label>Email</label><input name="email" type="email" data-rule="req email" autocomplete="email"><div class="err" data-i18n="err_email">Enter a valid email</div></div>
+        </div>
+        <div class="field"><label data-i18n="a_f_topic">Topic</label>
+          <select name="topic">
+            <option data-i18n="a_t1">Membership</option><option data-i18n="a_t2">Ask for a tour</option><option data-i18n="a_t3">Private event or company night</option><option data-i18n="a_t4">Press</option><option data-i18n="a_t5">Something else</option>
+          </select></div>
+        <div class="field"><label data-i18n="a_f_msg">Message</label><textarea name="message" data-rule="req"></textarea><div class="err" data-i18n="err_req">Required</div></div>
+        <label class="check"><input type="checkbox" name="privacy" data-rule="check"><span data-i18n="a_f_priv">I accept that ThirdPlace stores my message to reply to me.</span></label>
+        <button class="btn btn-primary" data-i18n="send">Send message</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="section" id="blog">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Blog</span>
+        <h2 data-i18n="b_title">Plans in Madrid</h2>
+        <p data-i18n="b_text">Ideas for your group, from the people who think about Friday nights all week.</p>
+      </div>
+      <div class="grid g3" id="posts"></div>
+    </div>
+  </section>
+</main>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+const POSTS = [
+  { img: "assets/img/lounge.jpg", alt: { en: "Group of friends' plan in Madrid: the ThirdPlace lounge bar at night", es: "Plan con amigos en Madrid: el lounge de ThirdPlace de noche" }, tag: { en: "Guide", es: "Guía" },
+    title: { en: "10 plans in Madrid with friends that aren't another bar", es: "10 planes en Madrid con amigos que no son otro bar" },
+    intro: { en: "Bored of the same terrace every Friday? Here's our list for groups who want to actually do something.", es: "¿Cansado de la misma terraza cada viernes? Esta es nuestra lista para grupos que quieren hacer algo de verdad." },
+    more: { en: "Board game cafés in Malasaña, a karaoke room for the whole crew, a match night on a big screen, a ping-pong ladder, a retro gaming night, a pub quiz, a rooftop at sunset, a mocktail tasting, a movie night with blankets and, of course, a private room at ThirdPlace where you can do half of this list in one night.", es: "Cafés de juegos de mesa en Malasaña, una sala de karaoke para todo el grupo, un partido en pantalla grande, una liguilla de ping-pong, una noche de juegos retro, un pub quiz, una azotea al atardecer, una cata de mocktails, cine con mantas y, claro, una sala privada en ThirdPlace donde puedes hacer media lista en una noche." } },
+  { img: "assets/img/rooms.jpg", alt: { en: "Private karaoke room in Madrid with big screen and sofas", es: "Sala de karaoke privado en Madrid con pantalla grande y sofás" }, tag: { en: "Private rooms", es: "Salas privadas" },
+    title: { en: "Private karaoke in Madrid: how to plan the perfect night", es: "Karaoke privado en Madrid: cómo planear la noche perfecta" },
+    intro: { en: "Karaoke is Madrid's most searched night plan. Here's how to do it without strangers watching.", es: "El karaoke es el plan nocturno más buscado en Madrid. Así se hace sin desconocidos mirando." },
+    more: { en: "Book a room for the size of your group, build a shared playlist in advance, order sharing platters before the first song and save the power ballads for the end. A small room for six for three hours costs €105, so about €17 each.", es: "Reserva una sala del tamaño de tu grupo, haz una playlist compartida antes, pide tablas antes de la primera canción y guarda las baladas para el final. Una sala pequeña para seis durante tres horas cuesta 105 €, unos 17 € por persona." } },
+  { img: "assets/img/events.jpg", alt: { en: "Madrid skyline at sunset from the club's rooftop terrace", es: "Skyline de Madrid al atardecer desde la terraza del club" }, tag: { en: "Community", es: "Comunidad" },
+    title: { en: "New in Madrid? How to make friends in your first month", es: "¿Nuevo en Madrid? Cómo hacer amigos el primer mes" },
+    intro: { en: "One in four young people in Spain feels lonely. Moving to a new city makes it harder. It doesn't have to.", es: "Uno de cada cuatro jóvenes en España se siente solo. Mudarte a otra ciudad lo complica. No tiene por qué." },
+    more: { en: "Say yes to activity-based plans rather than just drinks: games, sports, tournaments. Go to the same place regularly so faces become familiar. And try our Newcomers' night: you come solo, a host sets up the tables and by the end you have a group chat.", es: "Di que sí a planes con actividad, no solo copas: juegos, deporte, torneos. Ve al mismo sitio con frecuencia para que las caras te suenen. Y prueba nuestra Noche de recién llegados: vienes solo, un anfitrión organiza las mesas y acabas con un grupo de WhatsApp." } }
+];
+window.pageInit = function () {
+  document.getElementById("wa-link").href = WHATSAPP;
+  const posts = document.getElementById("posts");
+  posts.innerHTML = POSTS.map((p, i) => `
+    <article class="card post reveal">
+      <div class="card-img"><img src="${p.img}" alt="${L(p.alt)}" loading="lazy"></div>
+      <div class="card-body"><span class="tagline">${L(p.tag)}</span><h3 style="font-size:1.05rem;text-transform:none;letter-spacing:.02em">${L(p.title)}</h3>
+        <p>${L(p.intro)}</p><p class="more">${L(p.more)}</p>
+        <button class="link" style="background:none;border:0;cursor:pointer" data-post="${i}">${t("read_more", "Read more")}</button></div>
+    </article>`).join("");
+  posts.addEventListener("click", e => {
+    const b = e.target.closest("[data-post]"); if (!b) return;
+    const open = b.closest(".post").classList.toggle("open");
+    b.textContent = open ? t("read_less", "Show less") : t("read_more", "Read more");
+  });
+  const form = document.getElementById("contact-form");
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    if (!validate(form)) return;
+    const msgs = store.get("messages", []);
+    msgs.push({ name: form.name.value, email: form.email.value, topic: form.topic.value, message: form.message.value, date: new Date().toISOString() });
+    store.set("messages", msgs);
+    form.reset();
+    modal(`<span class="logo-3">3</span><h3>${t("msg_ok", "Message sent")}</h3><p>${t("msg_ok_txt", "Thanks! We usually reply within 24 hours. For something urgent, WhatsApp is faster.")}</p>`);
+  });
+};
+</script>
+</body>
+</html>

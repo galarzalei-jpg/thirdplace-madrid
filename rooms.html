@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Private Rooms in Madrid with Karaoke · ThirdPlace Madrid</title>
+<meta name="description" content="Private rooms in Madrid for groups of up to 12: big screen, consoles, karaoke and room service. From €35 per hour for members.">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-title="nav_rooms">
+<main>
+  <section class="page-hero">
+    <img class="hero-bg" src="assets/img/rooms.jpg" alt="Private room with sofas and a big screen showing a football match">
+    <div class="container">
+      <span class="eyebrow" data-i18n="z_rooms_tag">Your space. Your rules.</span>
+      <h1 data-i18n="r_title">Private rooms in Madrid</h1>
+      <p data-i18n="r_lead">A living room for your group, ready when you arrive. Big screen, consoles, karaoke, sofas, and food and drinks delivered to the door like hotel room service.</p>
+      <div class="btn-row mt-3"><a href="#book" class="btn btn-primary" data-i18n="book_room">Book a room</a></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid g2" id="room-cards"></div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow" data-i18n="r_inc_eye">In every room</span>
+        <h2 data-i18n="r_inc_title">Made for every kind of night</h2>
+      </div>
+      <div class="grid g4">
+        <div class="reveal"><h4 data-i18n="r_i1t">Match nights</h4><p class="small mt-1" data-i18n="r_i1">Every league on a huge screen with proper sound.</p></div>
+        <div class="reveal"><h4 data-i18n="r_i2t">Private karaoke</h4><p class="small mt-1" data-i18n="r_i2">Private karaoke in Madrid without strangers watching: thousands of songs, two mics and soundproof walls.</p></div>
+        <div class="reveal"><h4 data-i18n="r_i3t">Gaming sessions</h4><p class="small mt-1" data-i18n="r_i3">PS5 and Xbox with four controllers each.</p></div>
+        <div class="reveal"><h4 data-i18n="r_i4t">Birthdays</h4><p class="small mt-1" data-i18n="r_i4">Bring the cake, we handle the rest. Nobody cleans.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow" data-i18n="r_p_eye">Prices</span>
+        <h2 data-i18n="r_p_title">Simple hourly rates</h2>
+        <p data-i18n="r_p_text">Room hire is per hour. Food and drinks from room service are charged separately.</p>
+      </div>
+      <div class="table-wrap reveal">
+        <table>
+          <thead><tr><th data-i18n="r_th1">Room</th><th data-i18n="r_th2">Capacity</th><th>Social · Plus</th><th>Elite</th></tr></thead>
+          <tbody>
+            <tr><td data-i18n="r_small">Small room</td><td data-i18n="r_cap6">Up to 6</td><td>€35 / h</td><td data-i18n="r_el_s">4 h free / month, then €28 / h</td></tr>
+            <tr><td data-i18n="r_large">Large room</td><td data-i18n="r_cap12">Up to 12</td><td>€55 / h</td><td data-i18n="r_el_l">4 h free / month, then €44 / h</td></tr>
+            <tr><td data-i18n="r_guest">Guest day pass</td><td>—</td><td>€15</td><td data-i18n="r_el_g">4 passes included / month</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small mt-2" data-i18n="r_compare">Six friends, three hours in a small room: €105 in total. That's €17.50 each, less than a night of karaoke elsewhere.</p>
+    </div>
+  </section>
+
+  <section class="section alt" id="book">
+    <div class="container split">
+      <div class="reveal">
+        <span class="eyebrow" data-i18n="r_b_eye">Book a room</span>
+        <h2 data-i18n="r_b_title">Check a date</h2>
+        <p class="mt-2" data-i18n="r_b_text">Booking is for members. Plus members get priority, Elite members use their free hours first. Pick a room and a date and we'll take you to the members area to confirm.</p>
+        <ul class="check-list mt-3">
+          <li data-i18n="r_b_1">Book up to 60 days ahead</li>
+          <li data-i18n="r_b_2">1 to 4 hours per booking</li>
+          <li data-i18n="r_b_3">Free cancellation up to 24 h before</li>
+        </ul>
+      </div>
+      <form class="panel form reveal" id="quick-book" novalidate>
+        <div class="field"><label data-i18n="r_th1">Room</label>
+          <select name="room"><option value="small" data-i18n="r_small_opt">Small room · up to 6 · €35/h</option><option value="large" data-i18n="r_large_opt">Large room · up to 12 · €55/h</option></select></div>
+        <div class="field"><label data-i18n="date">Date</label><input type="date" name="date" data-rule="req future"><div class="err" data-i18n="err_date">Choose today or a future date</div></div>
+        <div class="field"><label data-i18n="people">People</label><input type="number" name="people" min="1" max="12" value="6"></div>
+        <button class="btn btn-primary btn-block" data-i18n="r_b_btn">Continue booking</button>
+        <p class="small center" id="qb-note"></p>
+      </form>
+    </div>
+  </section>
+
+  <section class="section" id="service">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow" data-i18n="r_s_eye">From the bar to your room</span>
+        <h2 data-i18n="r_s_title">Room service menu</h2>
+        <p data-i18n="r_s_text">Order from the tablet in your room. It arrives at the door, anytime.</p>
+      </div>
+      <div class="grid g2">
+        <div class="panel reveal"><h3 data-i18n="c_food">Food</h3><div id="rs-food"></div></div>
+        <div class="panel reveal"><h3 data-i18n="c_drinks">Drinks</h3><div id="rs-drinks"></div></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+window.pageInit = function () {
+  document.getElementById("room-cards").innerHTML = Object.entries(ROOMS).map(([k, r]) => `
+    <div class="card reveal">
+      <div class="card-img"><img src="${r.img}" alt="${L(r.alt)}" loading="lazy"></div>
+      <div class="card-body">
+        <span class="tagline">${t("up_to", "Up to")} ${r.cap} ${t("people_l", "people")}</span>
+        <h3>${L(r.name)}</h3>
+        <p>${L(r.desc)}</p>
+        <div class="row" style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;gap:12px;flex-wrap:wrap">
+          <span style="font-family:var(--head);font-size:1.6rem;color:var(--amber)">€${r.rate}<small style="font-size:.85rem;color:var(--muted)"> / ${t("hour", "hour")}</small></span>
+          <button class="btn btn-primary btn-sm" data-book="${k}">${t("book", "Book")}</button>
+        </div>
+      </div>
+    </div>`).join("");
+  document.getElementById("rs-food").innerHTML = menuList(MENU.food);
+  document.getElementById("rs-drinks").innerHTML = menuList(MENU.drinks);
+
+  const form = document.getElementById("quick-book");
+  form.date.min = todayISO();
+  const me = Auth.current();
+  document.getElementById("qb-note").textContent = me
+    ? t("r_logged", "Logged in as") + " " + me.name + " (" + TIERS[me.tier].name + ")"
+    : t("r_notlogged", "You'll need to log in or join to confirm.");
+
+  document.querySelectorAll("[data-book]").forEach(b => b.addEventListener("click", () => {
+    form.room.value = b.dataset.book; document.getElementById("book").scrollIntoView({ behavior: "smooth" });
+    setTimeout(() => form.date.focus(), 500);
+  }));
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    if (!validate(form)) return;
+    const q = `tab=book&room=${form.room.value}&date=${form.date.value}`;
+    if (!Auth.current()) { store.set("pendingBooking", q); membersOnlyModal(); return; }
+    location.href = "account.html?" + q;
+  });
+};
+</script>
+</body>
+</html>

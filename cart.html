@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cart · ThirdPlace Madrid</title>
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-title="cart_title">
+<main>
+  <section class="section">
+    <div class="container">
+      <span class="eyebrow" data-i18n="nav_merch">Merch</span>
+      <h1 style="font-size:clamp(1.8rem,4vw,2.8rem)" data-i18n="cart_title">Your cart</h1>
+      <div class="split mt-4" style="align-items:start" id="cart-wrap">
+        <div id="lines"></div>
+        <form class="panel form" id="checkout" novalidate>
+          <h3 data-i18n="checkout">Checkout</h3>
+          <div class="field"><label data-i18n="full_name">Full name</label><input name="name" data-rule="req" autocomplete="name"><div class="err" data-i18n="err_req">Required</div></div>
+          <div class="field"><label>Email</label><input name="email" type="email" data-rule="req email" autocomplete="email"><div class="err" data-i18n="err_email">Enter a valid email</div></div>
+          <div class="field"><label data-i18n="delivery">Delivery</label>
+            <select name="delivery"><option value="pickup" data-i18n="pickup">Pick up at the club · free</option><option value="ship" data-i18n="ship">Delivery in Madrid · €4.90</option></select></div>
+          <div class="field" id="addr-field" hidden><label data-i18n="address">Address</label><input name="address" autocomplete="street-address"><div class="err" data-i18n="err_req">Required</div></div>
+          <div id="pay"></div>
+          <div class="price-summary" id="summary"></div>
+          <button class="btn btn-primary btn-block" data-i18n="place_order">Place order</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+window.pageInit = function () {
+  const form = document.getElementById("checkout");
+  document.getElementById("pay").outerHTML = paymentFields();
+  cardFormatting(form);
+  const me = Auth.current();
+  if (me) { form.name.value = me.name; form.email.value = me.email; }
+  form.delivery.addEventListener("change", () => {
+    const ship = form.delivery.value === "ship";
+    document.getElementById("addr-field").hidden = !ship;
+    form.address.dataset.rule = ship ? "req" : "";
+    if (!ship) form.address.removeAttribute("data-rule");
+    render();
+  });
+  document.getElementById("lines").addEventListener("click", e => {
+    const b = e.target.closest("[data-q]"); if (!b) return;
+    const item = Cart.items().find(i => i.key === b.dataset.key);
+    Cart.setQty(b.dataset.key, b.dataset.q === "rm" ? 0 : item.qty + (+b.dataset.q));
+    render();
+  });
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    if (!Cart.count()) { toast(t("cart_empty", "Your cart is empty."), "error"); return; }
+    if (!validate(form)) return;
+    const ship = form.delivery.value === "ship" ? 4.9 : 0;
+    const order = { id: "TP-" + Date.now().toString().slice(-6), date: todayISO(), user: me ? me.id : null,
+      items: Cart.items(), total: Cart.total() + ship, delivery: form.delivery.value, email: form.email.value.trim() };
+    const orders = store.get("orders", []); orders.push(order); store.set("orders", orders);
+    Cart.clear(); render(); form.reset();
+    modal(`<span class="logo-3">3</span><h3>${t("order_ok", "Order confirmed")}</h3>
+      <p>${t("order_num", "Order number")} <strong>${order.id}</strong> · ${euro(order.total)}</p>
+      <p class="mt-1">${order.delivery === "ship" ? t("order_ship", "We'll deliver it within 2–3 days.") : t("order_pick", "Ready to pick up at the bar tomorrow.")}</p>
+      <div class="btn-row"><a class="btn btn-primary" href="merch.html">${t("keep_shopping", "Keep shopping")}</a></div>`);
+  });
+  render();
+};
+function render() {
+  const items = Cart.items(); const form = document.getElementById("checkout");
+  const lines = document.getElementById("lines");
+  lines.innerHTML = items.length ? items.map(i => {
+    const p = PRODUCTS.find(x => x.id === i.id);
+    return `<div class="cart-line">
+      <div class="art">${ART[p.id]}</div>
+      <div><strong>${L(p.name)}</strong>${i.size ? `<div class="small" style="color:var(--muted)">${t("size", "Size")}: ${i.size}</div>` : ""}
+        <div class="small" style="color:var(--amber)">${euro(p.price * i.qty)}</div></div>
+      <div class="qty"><button data-q="-1" data-key="${i.key}" aria-label="-">−</button><span>${i.qty}</span><button data-q="1" data-key="${i.key}" aria-label="+">+</button></div>
+      <button class="remove" data-q="rm" data-key="${i.key}">${t("remove", "Remove")}</button>
+    </div>`;
+  }).join("") : `<div class="empty">${t("cart_empty", "Your cart is empty.")}<div class="mt-2"><a class="btn btn-primary btn-sm" href="merch.html">${t("browse_merch", "Browse merch")}</a></div></div>`;
+  const ship = form.delivery.value === "ship" ? 4.9 : 0;
+  document.getElementById("summary").innerHTML = `
+    <div><span>${t("subtotal", "Subtotal")}</span><span>${euro(Cart.total())}</span></div>
+    <div><span>${t("delivery", "Delivery")}</span><span>${ship ? euro(ship) : t("free", "Free")}</span></div>
+    <div class="total"><span>${t("total", "Total")}</span><span>${euro(Cart.total() + ship)}</span></div>`;
+}
+</script>
+</body>
+</html>

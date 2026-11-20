@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Events · ThirdPlace Madrid</title>
+<meta name="description" content="Tournaments, karaoke, match nights, themed nights and food experiences for ThirdPlace members in Madrid.">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-title="nav_events">
+<main>
+  <section class="page-hero">
+    <img class="hero-bg" src="assets/img/events.jpg" alt="Madrid skyline at sunset from the ThirdPlace rooftop terrace">
+    <div class="container">
+      <span class="eyebrow" data-i18n="ev_eye">Exclusive events</span>
+      <h1 data-i18n="h_e_title">Special nights, real connections</h1>
+      <p data-i18n="ev_lead">New in town or here every week, events are the easiest way in. Come solo, leave with a group.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="filters" id="filters"></div>
+      <div id="event-list"></div>
+    </div>
+  </section>
+</main>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+let filter = "all";
+const rsvps = () => store.get("rsvps", {});   // { userId: [eventId,...] }
+window.pageInit = function () {
+  const f = document.getElementById("filters");
+  const types = [["all", t("all", "All")], ...Object.entries(EVENT_TYPES).map(([k, v]) => [k, L(v)])];
+  f.innerHTML = types.map(([k, n]) => `<button class="chip ${k === filter ? "on" : ""}" data-f="${k}">${n}</button>`).join("");
+  f.addEventListener("click", e => {
+    const b = e.target.closest("[data-f]"); if (!b) return;
+    filter = b.dataset.f; f.querySelectorAll(".chip").forEach(c => c.classList.toggle("on", c === b)); render();
+  });
+  document.getElementById("event-list").addEventListener("click", e => {
+    const b = e.target.closest("[data-rsvp]"); if (!b) return;
+    const me = Auth.current();
+    if (!me) { membersOnlyModal(t("ev_mo", "Events are for members and their guests. Join or log in to save your spot.")); return; }
+    const ev = getEvents().find(x => x.id === b.dataset.rsvp);
+    if (ev.elite && me.tier !== "elite") { toast(t("ev_elite_only", "This one is for Elite members only."), "error"); return; }
+    const all = rsvps(); const mine = all[me.id] || [];
+    if (mine.includes(ev.id)) { all[me.id] = mine.filter(x => x !== ev.id); toast(t("ev_cancel", "Spot released.")); }
+    else { all[me.id] = [...mine, ev.id]; toast(t("ev_ok", "You're in! See you there.")); }
+    store.set("rsvps", all); render();
+  });
+  render();
+  if (location.hash) setTimeout(() => { const el = document.querySelector(location.hash); if (el) { el.scrollIntoView({ behavior: "smooth", block: "center" }); el.style.borderColor = "var(--amber)"; } }, 300);
+};
+function render() {
+  const me = Auth.current(); const mine = me ? (rsvps()[me.id] || []) : [];
+  const list = getEvents().filter(e => filter === "all" || e.type === filter);
+  const going = (id) => Object.values(rsvps()).filter(a => a.includes(id)).length;
+  document.getElementById("event-list").innerHTML = list.length ? list.map(e => {
+    const d = new Date(e.date + "T12:00:00"); const joined = mine.includes(e.id);
+    const left = Math.max(0, e.spots - 7 - going(e.id));
+    return `<div class="event ${e.gaming ? "gaming" : ""}" id="${e.id}">
+      <div class="event-date"><b>${d.getDate()}</b><span>${fmtDate(e.date, { month: "short" })}</span></div>
+      <div><span class="badge ${e.gaming ? "violet" : "ghost"}">${L(EVENT_TYPES[e.type])}</span>${e.elite ? ' <span class="badge">Elite</span>' : ""}
+        <h3>${L(e.title)}</h3><p>${L(e.desc)}</p>
+        <div class="event-meta"><span>${fmtDate(e.date, { weekday: "long", day: "numeric", month: "long" })} · ${e.time}</span><span>${left} ${t("spots_left", "spots left")}</span></div></div>
+      <button class="btn ${joined ? "btn-ghost" : (e.gaming ? "btn-violet" : "btn-primary")} btn-sm" data-rsvp="${e.id}">${joined ? "✓ " + t("going", "Going") : t("save_spot", "Save my spot")}</button>
+    </div>`;
+  }).join("") : `<div class="empty">${t("ev_none", "No events in this category right now.")}</div>`;
+}
+</script>
+</body>
+</html>

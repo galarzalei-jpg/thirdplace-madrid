@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Members area · ThirdPlace Madrid</title>
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-title="my_account">
+<main>
+  <section class="section" style="padding-top:56px">
+    <div class="container">
+      <span class="eyebrow" data-i18n="ac_eye">Members area</span>
+      <h1 style="font-size:clamp(1.7rem,4vw,2.6rem)" id="hello"></h1>
+      <div class="account-layout mt-4">
+        <nav class="side-nav" id="side">
+          <button data-tab="overview" data-i18n="ac_t1">Overview</button>
+          <button data-tab="book" data-i18n="ac_t2">Book a room</button>
+          <button data-tab="spot" data-i18n="ac_t3">Weekend spot</button>
+          <button data-tab="guests" data-i18n="ac_t4">Invite a guest</button>
+          <button data-tab="bookings" data-i18n="ac_t5">My bookings</button>
+          <button data-tab="settings" data-i18n="ac_t6">Settings</button>
+        </nav>
+        <div>
+          <!-- OVERVIEW -->
+          <div class="tab" id="tab-overview">
+            <div class="split" style="gap:36px;align-items:center">
+              <div class="member-card" id="mcard"></div>
+              <div><h3 data-i18n="ac_benefits">Your benefits</h3><ul class="check-list mt-2" id="benefits"></ul>
+                <div class="btn-row mt-3" id="upgrade-cta"></div></div>
+            </div>
+            <div class="stats mt-4" id="stats"></div>
+            <div class="mt-4 panel">
+              <h3 data-i18n="ac_next">Coming up</h3>
+              <div id="next-list"></div>
+            </div>
+          </div>
+
+          <!-- BOOK A ROOM -->
+          <div class="tab" id="tab-book">
+            <div class="split" style="align-items:start;gap:30px">
+              <form class="panel form" id="room-form" novalidate>
+                <h3 data-i18n="ac_t2">Book a room</h3>
+                <div class="field"><label data-i18n="r_th1">Room</label><select name="room" id="room-select"></select></div>
+                <div class="form-row">
+                  <div class="field"><label data-i18n="date">Date</label><input type="date" name="date" data-rule="req future"><div class="err" id="date-err" data-i18n="err_date">Choose today or a future date</div></div>
+                  <div class="field"><label data-i18n="start">Start</label><select name="start"></select></div>
+                </div>
+                <div class="form-row">
+                  <div class="field"><label data-i18n="hours">Hours</label><select name="hours"><option>1</option><option selected>2</option><option>3</option><option>4</option></select></div>
+                  <div class="field"><label data-i18n="people">People</label><input type="number" name="people" min="1" value="4" data-rule="req"><div class="err" id="ppl-err"></div></div>
+                </div>
+                <div class="field"><label data-i18n="ac_occasion">Occasion (optional)</label>
+                  <select name="occasion"><option value="" data-i18n="ac_oc0">Just hanging out</option><option data-i18n="ac_oc1">Match night</option><option data-i18n="ac_oc2">Karaoke</option><option data-i18n="ac_oc3">Gaming</option><option data-i18n="ac_oc4">Birthday</option><option data-i18n="ac_oc5">Movie night</option></select></div>
+                <div id="avail" class="small"></div>
+                <div class="price-summary" id="room-sum"></div>
+                <button class="btn btn-primary btn-block" data-i18n="ac_confirm_booking">Confirm booking</button>
+              </form>
+              <div>
+                <div class="card"><div class="card-img"><img id="room-img" src="assets/img/rooms.jpg" alt=""></div><div class="card-body"><h3 id="room-name"></h3><p id="room-desc"></p></div></div>
+                <p class="small mt-2" id="room-rules"></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- WEEKEND SPOT -->
+          <div class="tab" id="tab-spot"><div id="spot-wrap"></div></div>
+
+          <!-- GUESTS -->
+          <div class="tab" id="tab-guests">
+            <div class="split" style="align-items:start;gap:30px">
+              <form class="panel form" id="guest-form" novalidate>
+                <h3 data-i18n="ac_t4">Invite a guest</h3>
+                <div class="field"><label data-i18n="ac_gname">Guest's name</label><input name="gname" data-rule="req"><div class="err" data-i18n="err_req">Required</div></div>
+                <div class="field"><label data-i18n="date">Date</label><input type="date" name="date" data-rule="req future"><div class="err" data-i18n="err_date">Choose today or a future date</div></div>
+                <div class="price-summary" id="guest-sum"></div>
+                <button class="btn btn-primary btn-block" data-i18n="ac_send_inv">Send invitation</button>
+              </form>
+              <div class="panel"><h4 data-i18n="ac_g_how">How guests work</h4>
+                <p class="small mt-1" data-i18n="ac_g_txt">Your guest gets a day pass in their name. They show it at the door with ID and have full access to the club with you that day.</p>
+                <ul class="check-list mt-2"><li>Social: €15 / pass</li><li data-i18n="ac_g_plus">Plus: 2 free passes / month, then €15</li><li data-i18n="ac_g_elite">Elite: 4 free passes / month, then €15</li></ul></div>
+            </div>
+          </div>
+
+          <!-- BOOKINGS -->
+          <div class="tab" id="tab-bookings">
+            <div class="panel"><h3 data-i18n="ac_upcoming">Upcoming</h3><div id="up-list"></div></div>
+            <div class="panel mt-3"><h3 data-i18n="ac_past">Past</h3><div id="past-list"></div></div>
+            <div class="panel mt-3"><h3 data-i18n="ac_orders">Merch orders</h3><div id="order-list"></div></div>
+          </div>
+
+          <!-- SETTINGS -->
+          <div class="tab" id="tab-settings">
+            <form class="panel form" id="profile" novalidate>
+              <h3 data-i18n="ac_profile">Profile</h3>
+              <div class="form-row">
+                <div class="field"><label data-i18n="full_name">Full name</label><input name="name" data-rule="req"><div class="err" data-i18n="err_req">Required</div></div>
+                <div class="field"><label data-i18n="phone">Phone</label><input name="phone" data-rule="phone"><div class="err" data-i18n="err_phone">Enter a valid phone</div></div>
+              </div>
+              <div class="field"><label>Email</label><input name="email" disabled></div>
+              <button class="btn btn-primary" style="justify-self:start" data-i18n="save">Save changes</button>
+            </form>
+            <div class="panel mt-3">
+              <h3 data-i18n="ac_plan">Membership</h3>
+              <p class="mt-1" id="plan-txt"></p>
+              <div class="btn-row mt-2"><a href="join.html" class="btn btn-ghost" data-i18n="ac_change">Change level</a><button class="btn btn-ghost" id="logout" data-i18n="log_out">Log out</button><button class="btn btn-ghost" id="delete" style="border-color:var(--err);color:var(--err)" data-i18n="ac_delete">Cancel membership</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+let me;
+const all = () => store.get("bookings", []);
+const mine = () => all().filter(b => b.user === me.id);
+const saveAll = (list) => store.set("bookings", list);
+const addHours = (start, h) => { const x = (parseInt(start) + h) % 24; return String(x).padStart(2, "0") + ":00"; };
+const isUpcoming = (b) => b.date >= todayISO();
+const freeHoursUsed = (month) => mine().filter(b => b.kind === "room" && monthKey(b.date) === month).reduce((s, b) => s + (b.free || 0), 0);
+const freeGuestsUsed = (month) => mine().filter(b => b.kind === "guest" && b.free && monthKey(b.date) === month).length;
+const maxDays = () => me.tier === "social" ? 14 : 60;
+
+window.pageInit = function () {
+  me = Auth.current();
+  if (!me) { location.replace("login.html?next=account.html"); return; }
+  document.getElementById("hello").textContent = t("hi", "Hi") + ", " + me.name.split(" ")[0];
+  const params = new URLSearchParams(location.search);
+  const side = document.getElementById("side");
+  side.addEventListener("click", e => { const b = e.target.closest("[data-tab]"); if (b) openTab(b.dataset.tab); });
+  setupRoom(params); setupSpot(); setupGuests(); setupSettings();
+  openTab(params.get("tab") || "overview");
+};
+
+function openTab(name) {
+  document.querySelectorAll("#side button").forEach(b => b.classList.toggle("on", b.dataset.tab === name));
+  document.querySelectorAll(".tab").forEach(tb => tb.classList.toggle("on", tb.id === "tab-" + name));
+  const u = new URL(location); u.searchParams.set("tab", name); history.replaceState(null, "", u);
+  if (name === "overview") renderOverview();
+  if (name === "bookings") renderBookings();
+  if (name === "book") updateRoom();
+  if (name === "guests") updateGuest();
+}
+
+/* ---------- Overview ---------- */
+function renderOverview() {
+  const tr = TIERS[me.tier]; const m = monthKey(todayISO());
+  document.getElementById("mcard").innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start"><span class="logo-3" style="font-size:2.4rem">3</span><span class="tier-name">${tr.name}</span></div>
+    <div><div class="name">${esc(me.name)}</div><div class="num">${me.id.toUpperCase().replace("U_", "TP · ")} · ${t("since", "Member since")} ${fmtDate(me.since, { month: "short", year: "numeric" })}</div></div>`;
+  document.getElementById("benefits").innerHTML = L(tr.features).map(f => `<li>${f}</li>`).join("");
+  document.getElementById("upgrade-cta").innerHTML = me.tier !== "elite"
+    ? `<a class="btn btn-primary btn-sm" href="join.html?tier=${me.tier === "social" ? "plus" : "elite"}">${t("upgrade_to", "Upgrade to")} ${me.tier === "social" ? "Plus" : "Elite"}</a>` : "";
+  const upcoming = mine().filter(isUpcoming);
+  const rs = (store.get("rsvps", {})[me.id] || []);
+  document.getElementById("stats").innerHTML = `
+    <div class="stat"><b>${tr.freeHours ? Math.max(0, tr.freeHours - freeHoursUsed(m)) + " h" : "—"}</b><span>${t("free_hours_left", "Free room hours left this month")}</span></div>
+    <div class="stat"><b>${tr.guestFree ? Math.max(0, tr.guestFree - freeGuestsUsed(m)) : "€15"}</b><span>${tr.guestFree ? t("guest_left", "Free guest passes left this month") : t("guest_price", "Per guest day pass")}</span></div>
+    <div class="stat"><b>${upcoming.length + rs.length}</b><span>${t("upcoming_cnt", "Upcoming bookings & events")}</span></div>`;
+  const evs = getEvents().filter(e => rs.includes(e.id)).map(e => ({ date: e.date, html: `<span class="badge ghost">${t("event", "Event")}</span> ${L(e.title)} · ${fmtDate(e.date)} ${e.time}` }));
+  const bks = upcoming.map(b => ({ date: b.date, html: describe(b) }));
+  const list = [...evs, ...bks].sort((a, b) => a.date.localeCompare(b.date)).slice(0, 5);
+  document.getElementById("next-list").innerHTML = list.length
+    ? list.map(i => `<div class="booking-item"><p style="color:var(--cream)">${i.html}</p></div>`).join("")
+    : `<p class="mt-1">${t("nothing_yet", "Nothing booked yet.")} <a class="link" href="?tab=book" onclick="openTab('book');return false">${t("book_room", "Book a room")}</a> · <a class="link" href="events.html">${t("nav_events", "Events")}</a></p>`;
+}
+function describe(b) {
+  if (b.kind === "room") return `<span class="badge">${L(ROOMS[b.room].name)}</span> ${fmtDate(b.date)} · ${b.start}–${addHours(b.start, b.hours)} · ${b.people} ${t("people_l", "people")}${b.occasion ? " · " + esc(b.occasion) : ""}`;
+  if (b.kind === "spot") return `<span class="badge ghost">${t("spot", "Weekend spot")}</span> ${L(SPOT_ZONES[b.zone])} · ${fmtDate(b.date)} · ${b.time} · ${b.people} ${t("people_l", "people")}`;
+  if (b.kind === "guest") return `<span class="badge muted">${t("guest", "Guest")}</span> ${esc(b.gname)} · ${fmtDate(b.date)}`;
+}
+
+/* ---------- Room booking ---------- */
+function setupRoom(params) {
+  const f = document.getElementById("room-form");
+  f.room.innerHTML = Object.entries(ROOMS).map(([k, r]) => `<option value="${k}">${L(r.name)} · ${t("up_to", "up to")} ${r.cap} · €${r.rate}/h</option>`).join("");
+  f.start.innerHTML = OPEN_SLOTS.map(s => `<option ${s === "20:00" ? "selected" : ""}>${s}</option>`).join("");
+  f.date.min = todayISO();
+  const mx = new Date(); mx.setDate(mx.getDate() + maxDays()); f.date.max = mx.toISOString().slice(0, 10);
+  if (params.get("room") && ROOMS[params.get("room")]) f.room.value = params.get("room");
+  f.date.value = params.get("date") && params.get("date") >= todayISO() ? params.get("date") : todayISO();
+  document.getElementById("room-rules").textContent = me.tier === "social"
+    ? t("rule_social", "Social members can book up to 14 days ahead. Plus and Elite get priority: 60 days ahead.")
+    : me.tier === "plus" ? t("rule_plus", "Priority booking: you can book up to 60 days ahead.")
+    : t("rule_elite", "Your free hours are applied first. Extra hours are 20% off.");
+  f.addEventListener("input", updateRoom); f.addEventListener("change", updateRoom);
+  f.addEventListener("submit", e => {
+    e.preventDefault();
+    const q = quote(); if (!validate(f) || !q.ok) { if (q.msg) toast(q.msg, "error"); return; }
+    const b = { id: uid(), user: me.id, kind: "room", room: f.room.value, date: f.date.value, start: f.start.value,
+      hours: +f.hours.value, people: +f.people.value, occasion: f.occasion.value, free: q.free, cost: q.cost, created: new Date().toISOString() };
+    const list = all(); list.push(b); saveAll(list);
+    modal(`<span class="logo-3">3</span><h3>${t("booked", "Room booked")}</h3>
+      <p>${L(ROOMS[b.room].name)} · ${fmtDate(b.date, { weekday: "long", day: "numeric", month: "long" })}<br>${b.start}–${addHours(b.start, b.hours)} · ${b.people} ${t("people_l", "people")}</p>
+      <p class="mt-1">${q.free ? `${q.free} h ${t("free_used", "from your free hours")} · ` : ""}${t("total", "Total")}: <strong>${euro(q.cost)}</strong></p>
+      <p class="small mt-1">${t("booked_note", "The room will be ready when you arrive. Order food from the tablet inside.")}</p>
+      <div class="btn-row"><button class="btn btn-primary" onclick="closeModal();openTab('bookings')">${t("see_bookings", "See my bookings")}</button></div>`);
+    updateRoom();
+  });
+}
+function quote() {
+  const f = document.getElementById("room-form"); const r = ROOMS[f.room.value]; const tr = TIERS[me.tier];
+  const hours = +f.hours.value; const date = f.date.value; const people = +f.people.value;
+  const res = { ok: true, free: 0, cost: 0, msg: "" };
+  if (!date || date < todayISO()) return { ok: false, msg: t("err_date", "Choose today or a future date") };
+  const days = (new Date(date) - new Date(todayISO())) / 864e5;
+  if (days > maxDays()) return { ok: false, msg: t("too_far", "That date is too far ahead for your level.") + " (" + maxDays() + " " + t("days", "days") + ")" };
+  if (people < 1 || people > r.cap) return { ok: false, msg: t("too_many", "Too many people for this room. Max") + " " + r.cap + "." };
+  // Availability: overlapping bookings for this room type (all members) + simulated busy rooms on weekend nights
+  const s = parseInt(f.start.value), e = s + hours;
+  const overlap = all().filter(b => b.kind === "room" && b.room === f.room.value && b.date === date && parseInt(b.start) < e && parseInt(b.start) + b.hours > s).length;
+  const wd = new Date(date + "T12:00:00").getDay();
+  const busy = (wd === 5 || wd === 6) && e > 20 ? r.units - 1 : 0;
+  const left = r.units - busy - overlap;
+  res.left = left;
+  if (left <= 0) return { ok: false, left: 0, msg: t("full", "No rooms of this size left at that time. Try another time or size.") };
+  if (tr.freeHours) {
+    const freeLeft = Math.max(0, tr.freeHours - freeHoursUsed(monthKey(date)));
+    res.free = Math.min(freeLeft, hours);
+    res.cost = (hours - res.free) * r.rate * (1 - tr.roomDiscount);
+    res.freeLeft = freeLeft;
+  } else res.cost = hours * r.rate;
+  return res;
+}
+function updateRoom() {
+  const f = document.getElementById("room-form"); const r = ROOMS[f.room.value];
+  f.people.max = r.cap;
+  const ri = document.getElementById("room-img"); ri.src = r.img; ri.alt = L(r.alt);
+  document.getElementById("room-name").textContent = L(r.name);
+  document.getElementById("room-desc").textContent = L(r.desc);
+  const q = quote(); const hours = +f.hours.value;
+  document.getElementById("avail").innerHTML = q.ok
+    ? `<span class="badge ok">✓ ${t("available", "Available")}</span> <span style="color:var(--muted)">${q.left} ${t("rooms_left", "of this size free at that time")}</span>`
+    : `<span class="badge" style="background:var(--err);color:#fff">${t("unavailable", "Not possible")}</span> <span style="color:var(--muted)">${q.msg}</span>`;
+  const tr = TIERS[me.tier];
+  document.getElementById("room-sum").innerHTML = `
+    <div><span>${hours} h × €${r.rate}</span><span>${euro(hours * r.rate)}</span></div>
+    ${tr.freeHours ? `<div><span>${t("free_hours", "Free Elite hours")} (${q.freeLeft ?? 0} ${t("left", "left")})</span><span>−${euro((q.free || 0) * r.rate)}</span></div>
+      <div><span>${t("elite_disc", "Elite 20% off extra hours")}</span><span>−${euro((hours - (q.free || 0)) * r.rate * tr.roomDiscount)}</span></div>` : ""}
+    <div class="total"><span>${t("total", "Total")}</span><span>${euro(q.ok ? q.cost : hours * r.rate)}</span></div>
+    <div><span class="small">${t("charged_on_file", "Charged to your card on file. Room service is separate.")}</span></div>`;
+}
+
+/* ---------- Weekend spot ---------- */
+const SPOT_ZONES = {
+  lounge: { en: "Lounge table", es: "Mesa en el lounge" },
+  gaming: { en: "Gaming station", es: "Puesto de gaming" },
+  pool: { en: "Pool table", es: "Mesa de billar" },
+  pingpong: { en: "Ping-pong table", es: "Mesa de ping-pong" }
+};
+function setupSpot() {
+  const wrap = document.getElementById("spot-wrap");
+  if (!TIERS[me.tier].weekend) {
+    wrap.innerHTML = `<div class="panel locked"><span class="logo-3">3</span><h3>${t("spot_locked", "Weekend reservations are a Plus perk")}</h3>
+      <p class="mt-1">${t("spot_locked_txt", "As a Social member you can come any day while there's room. Upgrade to Plus to reserve your table or spot on Friday, Saturday and Sunday.")}</p>
+      <div class="btn-row mt-3" style="justify-content:center"><a class="btn btn-primary" href="join.html?tier=plus">${t("upgrade_to", "Upgrade to")} Plus · €75</a></div></div>`;
+    return;
+  }
+  // next 4 weekends' Fri/Sat/Sun
+  const days = []; const d = new Date(); d.setHours(12);
+  for (let i = 0; i < 30 && days.length < 9; i++) { const x = new Date(d); x.setDate(d.getDate() + i); if ([5, 6, 0].includes(x.getDay())) { x.setMinutes(x.getMinutes() - x.getTimezoneOffset()); days.push(x.toISOString().slice(0, 10)); } }
+  wrap.innerHTML = `<form class="panel form" id="spot-form" novalidate style="max-width:620px">
+    <h3>${t("ac_t3", "Weekend spot")}</h3><p class="small">${t("spot_txt", "Reserve a table or spot for your group on busy nights. No charge: it's part of your membership.")}</p>
+    <div class="field"><label>${t("date", "Date")}</label><select name="date">${days.map(x => `<option value="${x}">${fmtDate(x, { weekday: "long", day: "numeric", month: "long" })}</option>`).join("")}</select></div>
+    <div class="field"><label>${t("zone", "Zone")}</label><select name="zone">${Object.entries(SPOT_ZONES).map(([k, v]) => `<option value="${k}">${L(v)}</option>`).join("")}</select></div>
+    <div class="form-row">
+      <div class="field"><label>${t("arrival", "Arrival")}</label><select name="time">${["18:00","19:00","20:00","21:00","22:00","23:00"].map(x => `<option ${x === "21:00" ? "selected" : ""}>${x}</option>`).join("")}</select></div>
+      <div class="field"><label>${t("people", "People")}</label><input type="number" name="people" min="1" max="8" value="4"></div>
+    </div>
+    <button class="btn btn-primary">${t("reserve", "Reserve spot")}</button></form>`;
+  const f = document.getElementById("spot-form");
+  f.addEventListener("submit", e => {
+    e.preventDefault();
+    const p = +f.people.value; if (p < 1 || p > 8) { toast(t("spot_max", "Spots are for 1 to 8 people. For more, book a private room."), "error"); return; }
+    if (mine().some(b => b.kind === "spot" && b.date === f.date.value)) { toast(t("spot_dup", "You already have a spot that day."), "error"); return; }
+    const list = all(); list.push({ id: uid(), user: me.id, kind: "spot", date: f.date.value, zone: f.zone.value, time: f.time.value, people: p });
+    saveAll(list); toast(t("spot_ok", "Spot reserved. See you there!"));
+  });
+}
+
+/* ---------- Guests ---------- */
+function setupGuests() {
+  const f = document.getElementById("guest-form"); f.date.min = todayISO(); f.date.value = todayISO();
+  f.addEventListener("change", updateGuest);
+  f.addEventListener("submit", e => {
+    e.preventDefault(); if (!validate(f)) return;
+    const g = guestQuote();
+    const list = all(); list.push({ id: uid(), user: me.id, kind: "guest", gname: f.gname.value.trim(), date: f.date.value, free: g.free, cost: g.cost });
+    saveAll(list);
+    modal(`<span class="logo-3">3</span><h3>${t("inv_ok", "Invitation sent")}</h3><p>${esc(f.gname.value.trim())} · ${fmtDate(f.date.value, { weekday: "long", day: "numeric", month: "long" })}</p><p class="mt-1">${g.free ? t("inv_free", "Free pass used.") : t("total", "Total") + ": " + euro(g.cost)}</p>`);
+    f.gname.value = ""; updateGuest();
+  });
+}
+function guestQuote() {
+  const f = document.getElementById("guest-form"); const tr = TIERS[me.tier];
+  const left = Math.max(0, tr.guestFree - freeGuestsUsed(monthKey(f.date.value || todayISO())));
+  return { left, free: left > 0, cost: left > 0 ? 0 : GUEST_PASS };
+}
+function updateGuest() {
+  const g = guestQuote(); const tr = TIERS[me.tier];
+  document.getElementById("guest-sum").innerHTML = `
+    ${tr.guestFree ? `<div><span>${t("free_passes_left", "Free passes left that month")}</span><span>${g.left} / ${tr.guestFree}</span></div>` : ""}
+    <div class="total"><span>${t("total", "Total")}</span><span>${g.free ? t("free", "Free") : euro(GUEST_PASS)}</span></div>`;
+}
+
+/* ---------- Bookings ---------- */
+function renderBookings() {
+  const list = mine().sort((a, b) => a.date.localeCompare(b.date));
+  const item = (b, cancel) => `<div class="booking-item"><div><p style="color:var(--cream)">${describe(b)}</p>
+    ${b.cost !== undefined ? `<p class="small">${[b.free ? (b.kind === "room" ? b.free + " h " + t("free_used", "from your free hours") : t("inv_free", "Free pass used.")) : "", b.cost ? euro(b.cost) : ""].filter(Boolean).join(" · ")}</p>` : ""}</div>
+    ${cancel ? `<button class="btn btn-ghost btn-sm" data-cancel="${b.id}">${t("cancel", "Cancel")}</button>` : ""}</div>`;
+  const up = list.filter(isUpcoming), past = list.filter(b => !isUpcoming(b)).reverse();
+  document.getElementById("up-list").innerHTML = up.length ? up.map(b => item(b, true)).join("") : `<p class="mt-1">${t("nothing_yet", "Nothing booked yet.")}</p>`;
+  document.getElementById("past-list").innerHTML = past.length ? past.map(b => item(b, false)).join("") : `<p class="mt-1">—</p>`;
+  const orders = store.get("orders", []).filter(o => o.user === me.id);
+  document.getElementById("order-list").innerHTML = orders.length ? orders.map(o => `<div class="booking-item"><div><h4>${o.id}</h4><p>${fmtDate(o.date)} · ${o.items.map(i => i.qty + "× " + L(PRODUCTS.find(p => p.id === i.id).name) + (i.size ? " (" + i.size + ")" : "")).join(", ")}</p></div><span class="amber">${euro(o.total)}</span></div>`).join("")
+    : `<p class="mt-1">${t("no_orders", "No orders yet.")} <a class="link" href="merch.html">${t("browse_merch", "Browse merch")}</a></p>`;
+  document.getElementById("up-list").onclick = e => {
+    const b = e.target.closest("[data-cancel]"); if (!b) return;
+    modal(`<h3>${t("cancel_q", "Cancel this booking?")}</h3><p>${t("cancel_txt", "Free hours and guest passes go back to your balance.")}</p>
+      <div class="btn-row"><button class="btn btn-primary" id="yes">${t("yes_cancel", "Yes, cancel")}</button><button class="btn btn-ghost" onclick="closeModal()">${t("keep", "Keep it")}</button></div>`);
+    document.getElementById("yes").onclick = () => { saveAll(all().filter(x => x.id !== b.dataset.cancel)); closeModal(); toast(t("cancelled", "Booking cancelled.")); renderBookings(); };
+  };
+}
+
+/* ---------- Settings ---------- */
+function setupSettings() {
+  const f = document.getElementById("profile");
+  f.name.value = me.name; f.phone.value = me.phone || ""; f.email.value = me.email;
+  document.getElementById("plan-txt").innerHTML = `${t("ac_on", "You're on")} <strong>${TIERS[me.tier].name}</strong> · €${TIERS[me.tier].price} / ${t("month", "month")}.`;
+  f.addEventListener("submit", e => {
+    e.preventDefault(); if (!validate(f)) return;
+    me = Auth.update({ name: f.name.value.trim(), phone: f.phone.value.trim() });
+    document.getElementById("hello").textContent = t("hi", "Hi") + ", " + me.name.split(" ")[0];
+    toast(t("saved", "Saved."));
+  });
+  document.getElementById("logout").onclick = () => { Auth.logout(); location.href = "index.html"; };
+  document.getElementById("delete").onclick = () => {
+    modal(`<h3>${t("del_q", "Cancel your membership?")}</h3><p>${t("del_txt", "Your account and all bookings will be removed from this browser. You can join again any time.")}</p>
+      <div class="btn-row"><button class="btn btn-primary" id="yes-del" style="background:var(--err);color:#fff">${t("del_yes", "Yes, cancel membership")}</button><button class="btn btn-ghost" onclick="closeModal()">${t("keep", "Keep it")}</button></div>`);
+    document.getElementById("yes-del").onclick = () => { Auth.remove(); location.href = "index.html"; };
+  };
+}
+</script>
+</body>
+</html>

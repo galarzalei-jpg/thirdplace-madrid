@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Join · ThirdPlace Madrid</title>
+<meta name="description" content="Become a ThirdPlace member in two minutes. No joining fee.">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-title="join_now">
+<main>
+  <section class="section">
+    <div class="container" style="max-width:720px">
+      <span class="eyebrow" data-i18n="j_eye">Become a member</span>
+      <h1 style="font-size:clamp(1.8rem,4vw,2.8rem)" id="j-title" data-i18n="j_title">Your spot is waiting</h1>
+      <p class="mt-1" id="j-sub" data-i18n="j_sub">Two minutes, no joining fee, cancel any time.</p>
+      <div class="stepper mt-3" id="stepper"><div class="on"></div><div></div><div></div></div>
+      <form class="panel form" id="join" novalidate>
+        <!-- Step 1 -->
+        <div class="jstep" data-step="1">
+          <h3 class="mb" data-i18n="j_s1">1. Choose your level</h3>
+          <div class="tier-pick mt-2" id="pick"></div>
+          <ul class="check-list mt-3" id="pick-feat"></ul>
+        </div>
+        <!-- Step 2 -->
+        <div class="jstep form" data-step="2" hidden>
+          <h3 data-i18n="j_s2">2. About you</h3>
+          <div class="field"><label data-i18n="full_name">Full name</label><input name="name" data-rule="req" autocomplete="name"><div class="err" data-i18n="err_req">Required</div></div>
+          <div class="form-row">
+            <div class="field"><label>Email</label><input name="email" type="email" data-rule="req email" autocomplete="email"><div class="err" data-i18n="err_email">Enter a valid email</div></div>
+            <div class="field"><label data-i18n="phone">Phone</label><input name="phone" data-rule="req phone" autocomplete="tel" placeholder="+34 600 000 000"><div class="err" data-i18n="err_phone">Enter a valid phone</div></div>
+          </div>
+          <div class="form-row">
+            <div class="field"><label data-i18n="birth">Date of birth</label><input name="birth" type="date" data-rule="req adult"><div class="err" data-i18n="err_adult">You must be 18 or over</div></div>
+            <div class="field"><label data-i18n="password">Password</label><input name="password" type="password" data-rule="min6" autocomplete="new-password"><div class="err" data-i18n="err_pw">At least 6 characters</div></div>
+          </div>
+          <label class="check"><input type="checkbox" name="terms" data-rule="check"><span data-i18n="j_terms">I accept the club rules and the membership terms.</span></label>
+        </div>
+        <!-- Step 3 -->
+        <div class="jstep form" data-step="3" hidden>
+          <h3 data-i18n="j_s3">3. Payment</h3>
+          <div id="pay"></div>
+          <div class="price-summary" id="summary"></div>
+        </div>
+        <div class="btn-row" style="justify-content:space-between">
+          <button type="button" class="btn btn-ghost" id="back" hidden data-i18n="back">Back</button>
+          <button class="btn btn-primary" id="next" style="margin-left:auto" data-i18n="continue">Continue</button>
+        </div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+let step = 1;
+window.pageInit = function () {
+  const form = document.getElementById("join");
+  const me = Auth.current();
+  const params = new URLSearchParams(location.search);
+  let tier = TIERS[params.get("tier")] ? params.get("tier") : "plus";
+  if (me && !params.get("tier")) tier = me.tier === "plus" ? "elite" : "plus";
+  const steps = me ? [1, 3] : [1, 2, 3];   // members changing level skip "about you"
+  if (me) {
+    document.getElementById("j-title").textContent = t("j_change", "Change your level");
+    document.getElementById("j-sub").textContent = t("j_current", "You're currently on") + " " + TIERS[me.tier].name + ".";
+    document.getElementById("stepper").innerHTML = "<div class='on'></div><div></div>";
+    document.querySelector("[data-step='3'] h3").textContent = t("j_s3b", "2. Confirm");
+  }
+
+  document.getElementById("pick").innerHTML = Object.entries(TIERS).map(([k, tr]) =>
+    `<div><input type="radio" name="tier" id="t-${k}" value="${k}" ${k === tier ? "checked" : ""}><label for="t-${k}"><b>${tr.name}</b><span>€${tr.price}</span><small style="color:var(--muted)"> / ${t("month", "month")}</small>${me && me.tier === k ? `<div class="small" style="color:var(--brass)">${t("current", "Current")}</div>` : ""}</label></div>`).join("");
+  const showFeat = () => {
+    tier = form.tier.value;
+    document.getElementById("pick-feat").innerHTML = L(TIERS[tier].features).map(f => `<li>${f}</li>`).join("");
+  };
+  form.addEventListener("change", e => { if (e.target.name === "tier") showFeat(); });
+  showFeat();
+
+  document.getElementById("pay").outerHTML = paymentFields();
+  cardFormatting(form);
+
+  const show = () => {
+    form.querySelectorAll(".jstep").forEach(s => s.hidden = +s.dataset.step !== step);
+    const idx = steps.indexOf(step);
+    document.querySelectorAll("#stepper div").forEach((d, i) => d.classList.toggle("on", i <= idx));
+    document.getElementById("back").hidden = idx === 0;
+    const nb = document.getElementById("next");
+    nb.textContent = step === 3 ? (me ? t("confirm", "Confirm") : t("j_pay", "Pay & join")) + " · €" + TIERS[tier].price : t("continue", "Continue");
+    if (step === 3) {
+      document.querySelector("[data-step='3'] .notice").hidden = false;
+      document.getElementById("summary").innerHTML = `
+        <div><span>${TIERS[tier].name} · ${t("monthly", "monthly")}</span><span>€${TIERS[tier].price}</span></div>
+        <div><span>${t("join_fee", "Joining fee")}</span><span>€0</span></div>
+        <div class="total"><span>${t("today", "Today")}</span><span>€${TIERS[tier].price}</span></div>`;
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  const current = () => form.querySelector(`.jstep[data-step="${step}"]`);
+  document.getElementById("back").addEventListener("click", () => { step = steps[steps.indexOf(step) - 1]; show(); });
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    if (step === 1 && me && form.tier.value === me.tier) { toast(t("j_same", "That's already your level."), "error"); return; }
+    if (step !== 1 && !validate(current())) return;
+    if (step === 2 && Auth.users().some(u => u.email.toLowerCase() === form.email.value.trim().toLowerCase())) {
+      form.email.closest(".field").classList.add("invalid"); toast(t("j_exists", "There's already an account with that email. Log in instead."), "error"); return;
+    }
+    if (step !== 3) { step = steps[steps.indexOf(step) + 1]; show(); return; }
+    // Finish
+    if (me) {
+      Auth.update({ tier });
+      toast(t("j_changed", "Done! You're now") + " " + TIERS[tier].name + ".");
+    } else {
+      Auth.register({ name: form.name.value.trim(), email: form.email.value.trim(), phone: form.phone.value.trim(), password: form.password.value, tier });
+      toast(t("j_welcome", "Welcome to ThirdPlace!"));
+    }
+    const pending = store.get("pendingBooking", null);
+    setTimeout(() => { if (pending) { store.del("pendingBooking"); location.href = "account.html?" + pending; } else location.href = "account.html"; }, 700);
+  });
+  show();
+};
+</script>
+</body>
+</html>

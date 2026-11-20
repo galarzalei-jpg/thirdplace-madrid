@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Log in · ThirdPlace Madrid</title>
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-title="log_in">
+<main>
+  <section class="section">
+    <div class="container" style="max-width:480px">
+      <div class="center"><span class="logo-3" style="font-size:4rem">3</span></div>
+      <h1 class="center" style="font-size:2rem" data-i18n="l_title">Welcome back</h1>
+      <p class="center mt-1" data-i18n="l_sub">Log in to book rooms, reserve your spot and invite guests.</p>
+      <form class="panel form mt-3" id="login" novalidate>
+        <div class="field"><label>Email</label><input name="email" type="email" data-rule="req email" autocomplete="username"><div class="err" data-i18n="err_email">Enter a valid email</div></div>
+        <div class="field"><label data-i18n="password">Password</label><input name="password" type="password" data-rule="req" autocomplete="current-password"><div class="err" data-i18n="err_req">Required</div></div>
+        <button class="btn btn-primary btn-block" data-i18n="log_in">Log in</button>
+        <p class="small center"><span data-i18n="l_new">Not a member yet?</span> <a class="link" href="join.html" data-i18n="join_now">Join now</a></p>
+      </form>
+      <div class="notice mt-3">
+        <strong data-i18n="l_demo">Demo accounts for the presentation</strong> <span data-i18n="l_demo_pw">(password: thirdplace)</span>
+        <div class="btn-row mt-1" id="demo"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+window.pageInit = function () {
+  const form = document.getElementById("login");
+  const params = new URLSearchParams(location.search);
+  const go = () => {
+    const pending = store.get("pendingBooking", null);
+    if (pending) { store.del("pendingBooking"); location.href = "account.html?" + pending; return; }
+    const next = params.get("next");
+    location.href = next && /^[a-z]+\.html/.test(next) && !next.startsWith("login") ? next : "account.html";
+  };
+  if (Auth.current()) { go(); return; }
+  document.getElementById("demo").innerHTML = ["social", "plus", "elite"].map(k =>
+    `<button class="btn btn-ghost btn-sm" data-demo="${k}">${TIERS[k].name}</button>`).join("");
+  document.getElementById("demo").addEventListener("click", e => {
+    const b = e.target.closest("[data-demo]"); if (!b) return;
+    form.email.value = b.dataset.demo + "@thirdplace.test"; form.password.value = "thirdplace";
+  });
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    if (!validate(form)) return;
+    const u = Auth.login(form.email.value, form.password.value);
+    if (!u) { toast(t("l_bad", "Wrong email or password."), "error"); return; }
+    toast(t("hi", "Hi") + " " + u.name.split(" ")[0] + "!");
+    setTimeout(go, 500);
+  });
+};
+</script>
+</body>
+</html>
