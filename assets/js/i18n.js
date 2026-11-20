@@ -19,6 +19,18 @@ window.TP_ES = {
   hi: "Hola", save: "Guardar cambios", saved: "Guardado.", cancel: "Cancelar", keep: "Mantenerla", back: "Atrás", continue: "Continuar", confirm: "Confirmar",
   c_food: "Comida", c_drinks: "Bebidas",
 
+  nav_about_s: "Nosotros",
+  terms: "Términos y condiciones", privacy: "Política de privacidad", cookies: "Política de cookies", cookie_settings: "Ajustes de cookies",
+  ck_title: "Cookies en ThirdPlace",
+  ck_text: "Usamos cookies esenciales para que la web funcione (idioma, inicio de sesión, carrito). Con tu permiso, también usaríamos cookies de análisis y de marketing para mejorar la web y nuestros anuncios.",
+  ck_more: "Política de cookies", ck_accept: "Aceptar todas", ck_reject: "Rechazar opcionales", ck_customise: "Personalizar", ck_save: "Guardar selección",
+  ck_saved: "Preferencias de cookies guardadas.",
+  ck_nec: "Esenciales", ck_nec_txt: "Mantienen tu sesión, tu idioma, tu carrito y tus reservas. Siempre activas.",
+  ck_ana: "Análisis", ck_ana_txt: "Nos ayudan a entender qué páginas se usan para poder mejorarlas.",
+  ck_mkt: "Marketing", ck_mkt_txt: "Miden nuestros anuncios en Instagram y TikTok y te muestran los que te interesan.",
+  legal_updated: "Última actualización", j_terms_link: "Acepto las <a class=\"link\" href=\"terms.html\" target=\"_blank\">normas del club y las condiciones de la membresía</a>.",
+  a_f_priv_link: "He leído la <a class=\"link\" href=\"privacy.html\" target=\"_blank\">política de privacidad</a> y acepto que ThirdPlace guarde mi mensaje para responderme.",
+
   /* ---- Home ---- */
   h_eyebrow: "Club social privado · Madrid",
   h_title: "Más que un club. <span>Tu segundo salón.</span>",

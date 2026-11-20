@@ -285,7 +285,7 @@ const NAV = [
   ["memberships.html", "nav_members", "Memberships"],
   ["events.html", "nav_events", "Events"],
   ["merch.html", "nav_merch", "Merch"],
-  ["about.html", "nav_about", "About & Contact"]
+  ["about.html", "nav_about", "About & Contact", "nav_about_s", "About"]
 ];
 const ICONS = {
   cart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 7h14l-1.5 12h-11z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>',
@@ -302,7 +302,7 @@ const LOGO = `<a href="index.html" class="logo" aria-label="ThirdPlace Madrid ho
 function renderLayout() {
   const page = location.pathname.split("/").pop() || "index.html";
   const me = Auth.current();
-  const links = NAV.map(([h, k, en]) => `<a href="${h}" class="${page === h ? "active" : ""}">${t(k, en)}</a>`).join("");
+  const links = NAV.map(([h, k, en, ks, ens]) => `<a href="${h}" class="${page === h ? "active" : ""}"${page === h ? ' aria-current="page"' : ""}>${ks ? t(ks, ens) : t(k, en)}</a>`).join("");
   const header = document.createElement("header");
   header.className = "site-header";
   header.innerHTML = `<div class="container nav">
@@ -315,7 +315,7 @@ function renderLayout() {
         <a class="icon-btn" href="cart.html" aria-label="${t("cart", "Cart")}">${ICONS.cart}<span class="cart-count"></span></a>
         ${me
           ? `<a class="icon-btn" href="account.html" aria-label="${t("my_account", "My account")}" title="${esc(me.name)}">${ICONS.user}</a>`
-          : `<a class="login-link" href="login.html">${t("log_in", "Log in")}</a>`}
+          : `<a class="icon-btn" href="login.html" aria-label="${t("log_in", "Log in")}" title="${t("log_in", "Log in")}">${ICONS.user}</a>`}
         ${me ? "" : `<a class="btn btn-primary btn-sm btn-join" href="join.html">${t("join_now", "Join now")}</a>`}
         <button class="icon-btn burger" aria-label="Menu" aria-expanded="false">${ICONS.menu}</button>
       </div>
@@ -344,7 +344,7 @@ function renderLayout() {
       <div><h4>${t("f_list", "The waiting list")}</h4><p class="small">${t("f_list_txt", "Limited memberships. Get early access to openings and events.")}</p>
         <form class="newsletter" novalidate><input type="email" placeholder="${t("your_email", "Your email")}" aria-label="Email" required><button class="btn btn-primary btn-sm">${t("join", "Join")}</button></form></div>
     </div>
-    <div class="footer-bottom"><span>© ${new Date().getFullYear()} ThirdPlace Madrid · #ThirdPlaceMadrid</span><span>${t("f_school", "School project: demo website, no real bookings or payments.")}</span></div>
+    <div class="footer-bottom"><span>© ${new Date().getFullYear()} ThirdPlace Madrid · #ThirdPlaceMadrid</span><nav class="legal-links" aria-label="Legal"><a href="terms.html">${t("terms", "Terms & Conditions")}</a><a href="privacy.html">${t("privacy", "Privacy Policy")}</a><a href="privacy.html#cookies">${t("cookies", "Cookie Policy")}</a><button type="button" class="link-btn" data-cookie-settings>${t("cookie_settings", "Cookie settings")}</button></nav><span>${t("f_school", "School project: demo website, no real bookings or payments.")}</span></div>
   </div>`;
   document.body.appendChild(footer);
   footer.querySelector(".newsletter").addEventListener("submit", e => {
@@ -357,8 +357,63 @@ function renderLayout() {
   const wa = document.createElement("a");
   wa.className = "whatsapp-fab"; wa.href = WHATSAPP; wa.target = "_blank"; wa.rel = "noopener"; wa.setAttribute("aria-label", "WhatsApp");
   wa.innerHTML = ICONS.wa; document.body.appendChild(wa);
+  footer.querySelector("[data-cookie-settings]").addEventListener("click", () => Consent.settings());
   updateCartCount();
+  Consent.init();
 }
+
+/* ===================== Cookie consent ===================== */
+/* Essential storage is always on (language, log-in, cart, bookings).
+   Analytics and marketing stay off until the visitor opts in; no such scripts load on this demo. */
+const Consent = {
+  get: () => store.get("consent", null),
+  has(cat) { const c = this.get(); return cat === "necessary" || !!(c && c[cat]); },
+  save(analytics, marketing) {
+    store.set("consent", { necessary: true, analytics: !!analytics, marketing: !!marketing, date: new Date().toISOString(), v: 1 });
+    const b = document.querySelector(".cookie-banner"); if (b) b.remove();
+    closeModal();
+    toast(t("ck_saved", "Cookie preferences saved."));
+  },
+  init() {
+    const c = this.get();
+    const expired = c && (Date.now() - new Date(c.date)) > 365 * 864e5;   // ask again after 12 months
+    if (!c || expired) this.banner();
+  },
+  banner() {
+    if (document.querySelector(".cookie-banner")) return;
+    const b = document.createElement("div");
+    b.className = "cookie-banner"; b.setAttribute("role", "dialog"); b.setAttribute("aria-live", "polite"); b.setAttribute("aria-label", t("ck_title", "Cookies at ThirdPlace"));
+    b.innerHTML = `<h4>${t("ck_title", "Cookies at ThirdPlace")}</h4>
+      <p>${t("ck_text", "We use essential cookies so the site works (language, log-in, cart). With your OK we'd also use analytics and marketing cookies to improve the site and our ads.")} <a class="link" href="privacy.html#cookies">${t("ck_more", "Cookie Policy")}</a></p>
+      <div class="cookie-actions">
+        <button type="button" class="btn btn-primary btn-sm" data-ck="all">${t("ck_accept", "Accept all")}</button>
+        <button type="button" class="btn btn-ghost btn-sm" data-ck="none">${t("ck_reject", "Reject optional")}</button>
+        <button type="button" class="link-btn" data-ck="settings">${t("ck_customise", "Customise")}</button>
+      </div>`;
+    b.addEventListener("click", e => {
+      const k = e.target.closest("[data-ck]"); if (!k) return;
+      if (k.dataset.ck === "all") this.save(true, true);
+      else if (k.dataset.ck === "none") this.save(false, false);
+      else this.settings();
+    });
+    document.body.appendChild(b);
+  },
+  settings() {
+    const c = this.get() || { analytics: false, marketing: false };
+    const row = (id, title, txt, on, locked) => `<label class="ck-row"><span><strong>${title}</strong><small>${txt}</small></span>
+      <input type="checkbox" class="switch" id="ck-${id}" ${on ? "checked" : ""} ${locked ? "disabled" : ""}></label>`;
+    modal(`<h3>${t("cookie_settings", "Cookie settings")}</h3>
+      <div class="ck-list">
+        ${row("necessary", t("ck_nec", "Essential"), t("ck_nec_txt", "Keep you logged in, remember your language, cart and bookings. Always on."), true, true)}
+        ${row("analytics", t("ck_ana", "Analytics"), t("ck_ana_txt", "Help us understand which pages are used, so we can improve them."), c.analytics, false)}
+        ${row("marketing", t("ck_mkt", "Marketing"), t("ck_mkt_txt", "Measure our Instagram and TikTok ads and show you relevant ones."), c.marketing, false)}
+      </div>
+      <div class="btn-row"><button type="button" class="btn btn-primary" id="ck-save">${t("ck_save", "Save choices")}</button><button type="button" class="btn btn-ghost" id="ck-all">${t("ck_accept", "Accept all")}</button></div>
+      <p class="small mt-2"><a class="link" href="privacy.html#cookies">${t("ck_more", "Cookie Policy")}</a></p>`);
+    document.getElementById("ck-save").onclick = () => this.save(document.getElementById("ck-analytics").checked, document.getElementById("ck-marketing").checked);
+    document.getElementById("ck-all").onclick = () => this.save(true, true);
+  }
+};
 
 /* Scroll reveal */
 function initReveal() {
@@ -394,4 +449,9 @@ document.addEventListener("DOMContentLoaded", () => {
   if (typeof window.pageInit === "function") window.pageInit();
   applyI18n(document.querySelector("main") || document);
   initReveal();
+  // The header is injected after load, so re-apply #anchor jumps (e.g. privacy.html#cookies)
+  if (location.hash.length > 1) {
+    const el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (el && el.offsetParent) setTimeout(() => el.scrollIntoView({ behavior: "instant", block: "start" }), 60);
+  }
 });
