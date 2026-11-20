@@ -3,7 +3,16 @@
 School project website for **ThirdPlace**, Madrid's private social club ("More than a club. Your second living room.").
 Built from Submissions 1 and 2: brand name, prices, visual identity (Jost + Inter, night black / amber / brass / cream, violet only for gaming), navigation map and editorial style.
 
-## Run it
+## Live website
+
+**https://galarzalei-jpg.github.io/thirdplace-madrid/**
+
+- **Hosting:** GitHub Pages (free static hosting by GitHub).
+- **Why:** it's free, serves the site over HTTPS, needs no server maintenance, and updates on every `git push`. The site is plain HTML/CSS/JS with no backend, so a static host is all it needs.
+- **Address:** free GitHub subdomain `galarzalei-jpg.github.io/thirdplace-madrid`. The planned domain `thirdplacemadrid.com` (Submission 2) could be pointed at it later from the Pages settings.
+- **Change from Submission 2:** the site was hand-built instead of using WordPress. For a school demo this avoids paid hosting and plugin costs, while keeping every section of the navigation map, including bookings and the members area.
+
+## Run it locally
 
 Option A — double-click `index.html` (everything works offline except the Google Fonts).
 
